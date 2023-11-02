@@ -41,6 +41,7 @@ def load_dataset(dataset='cifar10', datapath='cifar10/data', batch_size=128, \
                                          std=[x/255.0 for x in [63.0, 62.1, 66.7]])
 
         data_folder = get_relative_path(datapath)
+        print(" datapath: ", datapath)
         if raw_data:
             transform = transforms.Compose([
                 transforms.ToTensor()
@@ -50,12 +51,18 @@ def load_dataset(dataset='cifar10', datapath='cifar10/data', batch_size=128, \
                 transforms.ToTensor(),
                 normalize,
             ])
+        ## inject our own data?
+        # data_loader = torch.utils.data.DataLoader(yesno_data,
+        #                                   batch_size=1,
+        #                                   shuffle=True)
+        # torch.utils.data.DataLoader
 
         trainset = torchvision.datasets.CIFAR10(root=data_folder, train=True,
                                                 download=True, transform=transform)
         # If data_split>1, then randomly select a subset of the data. E.g., if datasplit=3, then
         # randomly choose 1/3 of the data.
         if data_split > 1:
+            print("splitting data more than 1: ")
             indices = torch.tensor(np.arange(len(trainset)))
             data_num = len(trainset) // data_split # the number of data in a chunk of the split
 
